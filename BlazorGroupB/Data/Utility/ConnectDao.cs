@@ -1,5 +1,6 @@
 ﻿using BlazorGroupB.Data.DAO;
 using Npgsql;
+using System.Diagnostics;
 
 namespace BlazorGroupB.Data.Utility;
 
@@ -30,9 +31,11 @@ public class ConnectDao
             messagesDao = new MessagesDao(conn);
             usersDao = new UsersDao(conn);
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            throw new Exception("Daoとの接続に失敗しました");
         }
 
     }

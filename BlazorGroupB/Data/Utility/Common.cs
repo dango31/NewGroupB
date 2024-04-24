@@ -1,4 +1,5 @@
 ﻿using BlazorGroupB.Models;
+using System.Diagnostics;
 
 namespace BlazorGroupB.Data.Utility;
 
@@ -40,8 +41,10 @@ public class Common
             connectDao.threadsDao.Update(dt, number);
 
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
             throw new Exception("PostMessagesエラー");
 
         }
@@ -71,8 +74,10 @@ public class Common
 
             return number;
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
             throw new Exception("NewThreadエラー");
         }
 
@@ -95,8 +100,10 @@ public class Common
             //  Userを作成する
             return connectDao.usersDao.Insert(user);
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
             throw new Exception("CreateUserIDエラー");
         }
 

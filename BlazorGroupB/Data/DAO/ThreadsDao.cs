@@ -133,23 +133,33 @@ public class ThreadsDao
         if (threadID == null || threadID == 0)
             return;
 
-        StringBuilder sql = new StringBuilder();
-        sql.Append("UPDATE \"Threads\" ")
-            .Append(" SET \"LastPostTime\" = @last_post_time ")
-            .Append(" WHERE \"ThreadID\" = @thread_id ")
-            .Append(" RETURNING \"ThreadID\"");
+        try
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.Append("UPDATE \"Threads\" ")
+                .Append(" SET \"LastPostTime\" = @last_post_time ")
+                .Append(" WHERE \"ThreadID\" = @thread_id ")
+                .Append(" RETURNING \"ThreadID\"");
 
-        //  書き込みを行う
-        NpgsqlCommand cmd = new NpgsqlCommand(sql.ToString(), conn);
+            //  書き込みを行う
+            NpgsqlCommand cmd = new NpgsqlCommand(sql.ToString(), conn);
 
-        cmd.Parameters.AddWithValue("@last_post_time", dt.ToString());
-        cmd.Parameters.AddWithValue("@thread_id", threadID);
+            cmd.Parameters.AddWithValue("@last_post_time", dt.ToString());
+            cmd.Parameters.AddWithValue("@thread_id", threadID);
 
-        //  TRANSACTION
-        transaction = conn.BeginTransaction();
-        int lastid = (int)cmd.ExecuteScalar();
+            //  TRANSACTION
+            transaction = conn.BeginTransaction();
+            int lastid = (int)cmd.ExecuteScalar();
 
-        //  TRANSACTIONコミット
-        transaction.Commit();
+            //  TRANSACTIONコミット
+            transaction.Commit();
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            throw new Exception("Threadsアップデート処理エラー");
+        }
+
     }
 }

@@ -80,8 +80,8 @@
     public int codeInteger;
 
     //  入力される値の保持
-    private string content = null;
-    private string nickname = null;
+    private string content = "";
+    private string nickname = "";
 
     //  メッセージ一覧を保持する
     private List<Messages> Msgs { get; set; } = new List<Messages>();
@@ -96,7 +96,7 @@
     string userdataID = "";
 
     //  commonクラス(npgsqlを使うクラス)
-    private Common common = new Common();
+    private Common common;
 
     //  占いデータの保存
     List<Uranais> uranais = new List<Uranais>();
@@ -115,28 +115,24 @@
     /// <returns></returns>
     private async Task Send()
     {
+
+        if (content?.Length > 300 || content == "")
+        {
+            Alert("投稿内容は300文字以下にして入力してください");
+            return;
+        }
+        if (nickname?.Length > 30)
+        {
+            Alert("ニックネームは30文字以下にして入力してください");
+            return;
+        }
+
+        //  名前と本文を追加する
+        msg.DetailMessage = content;
+        msg.WriteName = nickname != "" ? nickname : "名無し";
+
         try
         {
-            if (content == null)
-            {
-                Alert("本文を入力してください");
-                return;
-            }
-            if (content?.Length > 300)
-            {
-                Alert("投稿内容は300文字以下にして入力してください");
-                return;
-            }
-            if (nickname?.Length > 30)
-            {
-                Alert("ニックネームは30文字以下にして入力してください");
-                return;
-            }
-
-            //  名前と本文を追加する
-            msg.DetailMessage = content;
-            msg.WriteName = nickname ?? "名無し";
-
             //  占いを行う
             if (msg.DetailMessage.Contains("!uranai"))
             {
@@ -145,24 +141,41 @@
                 ura = uranais.Where(m => m.UranaiID == rand).ToList();
                 msg.DetailMessage += "占いの結果：" + ura[0].Fortune;
             }
+        }
+        catch
+        {
+            NaviManager.NavigateTo("/Error/6", forceLoad: true);
+        }
 
+        try
+        {
             //  メッセージの投稿を行う
             common.PostMessage(msg, codeInteger, userdataID);
 
+        }
+        catch
+        {
+            NaviManager.NavigateTo("/Error/3", forceLoad: true);
+        }
+        try
+        {
             //  Hubに送信します
             if (hubConnection is not null)
             {
                 await hubConnection.SendAsync("SendMessage", msg);
             }
-
-            //  contentデータの整理(削除)
-            content = null;
-
         }
         catch
         {
             NaviManager.NavigateTo("/Error", forceLoad: true);
+
         }
+
+
+        //  contentデータの整理(削除)
+        content = "";
+
+
     }
 
     /// <summary>
@@ -210,21 +223,32 @@
     /// <returns></returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        try
+        if (firstRender)
         {
-            if (firstRender)
+            string remoteUserAgent = "";
+            try
             {
-                //  UAをuserに追加する
-                var remoteUserAgent = await JSRuntime.InvokeAsync<string>("getUserAgent");
-
-                //  Userを作成する
-                userdataID = common.CreateUserID(remoteUserAgent);
+                //UAをuserに追加する
+                remoteUserAgent = await JSRuntime.InvokeAsync<string>("getUserAgent");
 
             }
-        }
-        catch
-        {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+                NaviManager.NavigateTo("/Error/4", forceLoad: true);
+            }
+            try
+            {
+                //  Userを作成する
+                userdataID = common.CreateUserID(remoteUserAgent);
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+                NaviManager.NavigateTo("/Error/5", forceLoad: true);
+            }
         }
 
     }
@@ -237,6 +261,19 @@
     {
         if (!int.TryParse(CodeID, out codeInteger))
             NaviManager.NavigateTo("/Error", forceLoad: true);
+
+        //  Commonクラスのインスタンス
+        try
+        {
+            common = new Common();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            NaviManager.NavigateTo("/Error/7", forceLoad: true);
+        }
+
 
         //  ハブコネクションの接続の構築
         hubConnection = new HubConnectionBuilder()
@@ -273,7 +310,9 @@
         }
         catch (Exception ex)
         {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            NaviManager.NavigateTo("/Error/0", forceLoad: true);
         }
 
         await hubConnection.StartAsync();
@@ -292,8 +331,10 @@
                 await hubConnection.DisposeAsync();
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
             NaviManager.NavigateTo("/Error", forceLoad: true);
         }
 
@@ -310,8 +351,10 @@
         {
             await JSRuntime.InvokeAsync<string>("messageBox", message);
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
             NaviManager.NavigateTo("/Error", forceLoad: true);
         }
 

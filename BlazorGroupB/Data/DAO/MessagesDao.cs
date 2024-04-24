@@ -82,7 +82,7 @@ public class MessagesDao
             //  パラメーターのセット
             cmd.Parameters.AddWithValue("@thread_id", msg.ThreadID);
             cmd.Parameters.AddWithValue("@user_id", msg.UserID ?? "UserIDの取得に失敗");
-            cmd.Parameters.AddWithValue("@write_name", msg.WriteName ?? "名無し");
+            cmd.Parameters.AddWithValue("@write_name", msg.WriteName == "" ? "名無し" : msg.WriteName);
             cmd.Parameters.AddWithValue("@detail_message", msg.DetailMessage ?? "本文の取得に失敗");
             cmd.Parameters.AddWithValue("@post_time", msg.PostTime);
 

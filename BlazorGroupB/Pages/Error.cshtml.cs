@@ -9,13 +9,27 @@ namespace BlazorGroupB.Pages
     [IgnoreAntiforgeryToken]
     public class ErrorModel : PageModel
     {
+        [BindProperty(SupportsGet = true)]
+        public int num { get; set; }
         public string? RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
         private readonly ILogger<ErrorModel> _logger;
 
-        public string errorMessage;
+        public string errorMessage = "予期せぬエラーが発生しました";
+
+        public string[] errorMainMessages = new string[]
+        {
+            "情報の取得に失敗しました",
+            "Alertの表示に失敗しました",
+            "スレッドの作成に失敗しました",
+            "メッセージの作成に失敗しました",
+            "UA情報の取得に失敗しました",
+            "User情報の生成に失敗しました",
+            "占いに失敗しました",
+            "データベースとの接続に問題が発生しました"
+        };
 
         public ErrorModel(ILogger<ErrorModel> logger)
         {
@@ -26,12 +40,8 @@ namespace BlazorGroupB.Pages
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 
-            if(int.TryParse(parameter, out var id))
-            {
-
-            }
-
-            errorMessage = "予期せぬエラーが発生しました";
+            if (errorMainMessages.Length >= num)
+                errorMessage = errorMainMessages[num];
         }
     }
 }

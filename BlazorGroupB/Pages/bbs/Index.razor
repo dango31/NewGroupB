@@ -101,7 +101,7 @@ else
         }
         catch (Exception ex)
         {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
+            NaviManager.NavigateTo("/Error/0", forceLoad: true);
         }
 
     }
@@ -158,8 +158,10 @@ else
             afterSearch = Ths.FindAll(x => x.ThreadName.Contains(searchString));
             searchbool = true;
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
             NaviManager.NavigateTo("/Error", forceLoad: true);
         }
 
@@ -178,7 +180,7 @@ else
         }
         catch
         {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
+            NaviManager.NavigateTo("/Error/1", forceLoad: true);
         }
 
     }

@@ -77,6 +77,7 @@
     //  ページの番号を保持する
     [Parameter]
     public string CodeID { get; set; }
+    public int codeInteger;
 
     //  入力される値の保持
     private string content = null;
@@ -145,12 +146,8 @@
                 msg.DetailMessage += "占いの結果：" + ura[0].Fortune;
             }
 
-            //  ThreadIDを追加する
-            if (int.TryParse(CodeID, out int number))
-            {
-                //  メッセージの投稿を行う
-                common.PostMessage(msg, number, userdataID);
-            }
+            //  メッセージの投稿を行う
+            common.PostMessage(msg, codeInteger, userdataID);
 
             //  Hubに送信します
             if (hubConnection is not null)
@@ -238,6 +235,8 @@
     /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
+        if (!int.TryParse(CodeID, out codeInteger))
+            NaviManager.NavigateTo("/Error", forceLoad: true);
 
         //  ハブコネクションの接続の構築
         hubConnection = new HubConnectionBuilder()
@@ -249,43 +248,32 @@
         // blazorに通知され、UIが更新される
         hubConnection.On<Messages>("ReceiveMessage", (msg) =>
         {
-            Msgs.Add(msg);
-            InvokeAsync(StateHasChanged);
+            if (msg.ThreadID == codeInteger)
+            {
+                Msgs.Add(msg);
+                InvokeAsync(StateHasChanged);
+            }
+
         });
+
         //  データベースから値を取り出す
-        if (int.TryParse(CodeID, out int number))
+        try
         {
-            try
-            {
-                //  メッセージ一覧を取り出す
-                Msgs = await _context.Messages.Where(m => m.ThreadID == number).ToListAsync<Messages>();
+            //  メッセージ一覧を取り出す
+            Msgs = await _context.Messages.Where(m => m.ThreadID == codeInteger).ToListAsync<Messages>();
 
-                //  スレッドを取り出して一つに入れる
-                List<Threads> ths = new List<Threads>();
-                ths = await _context.Threads.Where(m => m.ThreadID == number).ToListAsync<Threads>();
-                th = ths[0];
+            //  スレッドを取り出して一つに入れる
+            List<Threads> ths = new List<Threads>();
+            ths = await _context.Threads.Where(m => m.ThreadID == codeInteger).ToListAsync<Threads>();
+            th = ths[0];
 
-                //  占い一覧を取り出す
-                uranais = await _context.Uranais.ToListAsync<Uranais>();
-
-            }
-            catch (Exception ex)
-            {
-                NaviManager.NavigateTo("/Error", forceLoad: true);
-            }
+            //  占い一覧を取り出す
+            uranais = await _context.Uranais.ToListAsync<Uranais>();
 
         }
-        else
+        catch (Exception ex)
         {
-            try
-            {
-                Msgs = await _context.Messages.ToListAsync<Messages>();
-            }
-            catch
-            {
-                NaviManager.NavigateTo("/Error", forceLoad: true);
-            }
-
+            NaviManager.NavigateTo("/Error", forceLoad: true);
         }
 
         await hubConnection.StartAsync();

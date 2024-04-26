@@ -82,7 +82,7 @@ else
     private bool searchbool = false;
 
     //  検索文字の保持
-    string searchString = null;
+    string searchString = "";
 
     // チャンネル名を保持するプロパティ
     private string ChannelName { get; set; } = "エール第一チャンネル";
@@ -101,7 +101,7 @@ else
         }
         catch (Exception ex)
         {
-            NaviManager.NavigateTo("/Error/0", forceLoad: true);
+            NaviManager.NavigateTo("/Error/1", forceLoad: true);
         }
 
     }
@@ -149,7 +149,7 @@ else
     {
         try
         {
-            if (searchString.Length > 10)
+            if (searchString.Length > 10 || searchString == "")
             {
                 Alert("10文字以内にしてください");
                 return;
@@ -180,7 +180,7 @@ else
         }
         catch
         {
-            NaviManager.NavigateTo("/Error/1", forceLoad: true);
+            NaviManager.NavigateTo("/Error/2", forceLoad: true);
         }
 
     }

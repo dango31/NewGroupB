@@ -17,10 +17,11 @@ namespace BlazorGroupB.Pages
 
         private readonly ILogger<ErrorModel> _logger;
 
-        public string errorMessage = "予期せぬエラーが発生しました";
+        public string errorMessage = "";
 
         public string[] errorMainMessages = new string[]
         {
+            "予期せぬエラーが発生しました",
             "情報の取得に失敗しました",
             "Alertの表示に失敗しました",
             "スレッドの作成に失敗しました",

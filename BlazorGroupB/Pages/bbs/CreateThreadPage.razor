@@ -101,25 +101,25 @@
         {
             //  スレッドを新規で作成する
             number = common.NewThread(th, userdataID);
-
+            try
+            {
+                //  メッセージを新規で作成する
+                common.PostMessage(msg, number, userdataID);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+                NaviManager.NavigateTo("/Error/3", forceLoad: true);
+                return;
+            }
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
             NaviManager.NavigateTo("/Error/2", forceLoad: true);
-        }
-
-        try
-        {
-            //  メッセージを新規で作成する
-            common.PostMessage(msg, number, userdataID);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-            Debug.WriteLine(ex.StackTrace);
-            NaviManager.NavigateTo("/Error/3", forceLoad: true);
+            return;
         }
 
         //  そのurlにジャンプする
@@ -156,11 +156,23 @@
 
         if (firstRender)
         {
-            string remoteUserAgent = "";
+
             try
             {
                 //UAをuserに追加する
-                remoteUserAgent = await JSRuntime.InvokeAsync<string>("getUserAgent");
+                string remoteUserAgent = await JSRuntime.InvokeAsync<string>("getUserAgent");
+                try
+                {
+                    //  Userを作成する
+                    userdataID = common.CreateUserID(remoteUserAgent);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    Debug.WriteLine(ex.StackTrace);
+                    NaviManager.NavigateTo("/Error/5", forceLoad: true);
+                    return;
+                }
 
             }
             catch (Exception ex)
@@ -168,19 +180,10 @@
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine(ex.StackTrace);
                 NaviManager.NavigateTo("/Error/4", forceLoad: true);
+                return;
             }
 
-            try
-            {
-                //  Userを作成する
-                userdataID = common.CreateUserID(remoteUserAgent);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-                NaviManager.NavigateTo("/Error/5", forceLoad: true);
-            }
+
         }
 
     }

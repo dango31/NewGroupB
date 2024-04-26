@@ -19,7 +19,7 @@ public class ConnectDao
             var builder = new NpgsqlConnectionStringBuilder
             {
                 Host = "localhost",
-                //Database = "test",
+
                 Database = "GroupB_DataBase",
                 Username = "postgres",
                 Password = "postgres"
@@ -35,7 +35,7 @@ public class ConnectDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Daoとの接続に失敗しました");
+            throw;
         }
 
     }

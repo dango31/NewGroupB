@@ -45,30 +45,28 @@ public class UsersDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("コネクションオープンエラー");
+            throw;
 
         }
         catch (NullReferenceException ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
+            throw;
 
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("コネクション処理エラー");
+            throw;
 
         }
-
-        return false;
     }
 
     public string Insert(Users userdata)
     {
         NpgsqlTransaction transaction = null;
-        string result = "";
         try
         {
 
@@ -99,6 +97,7 @@ public class UsersDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
+            throw;
         }
 
 
@@ -140,13 +139,13 @@ public class UsersDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("インサートエラー");
+            throw;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("インサート処理エラー");
+            throw;
         }
         finally
         {
@@ -207,13 +206,13 @@ public class UsersDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("セレクトエラー");
+            throw;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("セレクト処理エラー");
+            throw;
         }
         finally
         {
@@ -260,13 +259,13 @@ public class UsersDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("セレクトUserIDエラー");
+            throw;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("セレクトUserID処理エラー");
+            throw;
         }
         finally
         {
@@ -278,11 +277,21 @@ public class UsersDao
     }
     public string UserIdRandom()
     {
-        var random = new Random();
-        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        string newUserID = new string(Enumerable.Repeat(chars, 10)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
-        return newUserID;
+        try
+        {
+            var random = new Random();
+            string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string newUserID = new string(Enumerable.Repeat(chars, 10)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+            return newUserID;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            throw;
+        }
+
     }
 
 }

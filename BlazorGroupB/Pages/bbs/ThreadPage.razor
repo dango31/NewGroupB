@@ -145,6 +145,7 @@
         catch
         {
             NaviManager.NavigateTo("/Error/6", forceLoad: true);
+            return;
         }
 
         try
@@ -156,6 +157,7 @@
         catch
         {
             NaviManager.NavigateTo("/Error/3", forceLoad: true);
+            return;
         }
         try
         {
@@ -228,8 +230,21 @@
             string remoteUserAgent = "";
             try
             {
-                //UAをuserに追加する
+                //  UAをuserに追加する
                 remoteUserAgent = await JSRuntime.InvokeAsync<string>("getUserAgent");
+
+                try
+                {
+                    //  Userを作成する
+                    userdataID = common.CreateUserID(remoteUserAgent);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    Debug.WriteLine(ex.StackTrace);
+                    NaviManager.NavigateTo("/Error/5", forceLoad: true);
+                    return;
+                }
 
             }
             catch (Exception ex)
@@ -237,18 +252,9 @@
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine(ex.StackTrace);
                 NaviManager.NavigateTo("/Error/4", forceLoad: true);
+                return;
             }
-            try
-            {
-                //  Userを作成する
-                userdataID = common.CreateUserID(remoteUserAgent);
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-                NaviManager.NavigateTo("/Error/5", forceLoad: true);
-            }
+
         }
 
     }
@@ -259,43 +265,52 @@
     /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
-        if (!int.TryParse(CodeID, out codeInteger))
-            NaviManager.NavigateTo("/Error", forceLoad: true);
 
-        //  Commonクラスのインスタンス
         try
         {
-            common = new Common();
+
+            if (!int.TryParse(CodeID, out codeInteger))
+                NaviManager.NavigateTo("/Error", forceLoad: true);
+            try
+            {
+                //  Commonクラスのインスタンス
+                common = new Common();
+            }
+            catch
+            {
+                NaviManager.NavigateTo("/Error/7", forceLoad: true);
+                return;
+            }
+
+            //  ハブコネクションの接続の構築
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NaviManager.ToAbsoluteUri("/chathub"))
+                .Build();
+
+            //  受信したデータをメッセージリストに追加している
+            //  最後にInvokeAsync(StateHasChanged)を呼び出すことで
+            // blazorに通知され、UIが更新される
+            hubConnection.On<Messages>("ReceiveMessage", (msg) =>
+            {
+                if (msg.ThreadID == codeInteger)
+                {
+                    Msgs.Add(msg);
+                    InvokeAsync(StateHasChanged);
+                }
+
+            });
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            NaviManager.NavigateTo("/Error/7", forceLoad: true);
+            NaviManager.NavigateTo("/Error", forceLoad: true);
+            return;
         }
 
-
-        //  ハブコネクションの接続の構築
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NaviManager.ToAbsoluteUri("/chathub"))
-            .Build();
-
-        //  受信したデータをメッセージリストに追加している
-        //  最後にInvokeAsync(StateHasChanged)を呼び出すことで
-        // blazorに通知され、UIが更新される
-        hubConnection.On<Messages>("ReceiveMessage", (msg) =>
-        {
-            if (msg.ThreadID == codeInteger)
-            {
-                Msgs.Add(msg);
-                InvokeAsync(StateHasChanged);
-            }
-
-        });
-
-        //  データベースから値を取り出す
         try
         {
+            //  データベースから値を取り出す
             //  メッセージ一覧を取り出す
             Msgs = await _context.Messages.Where(m => m.ThreadID == codeInteger).ToListAsync<Messages>();
 
@@ -307,15 +322,25 @@
             //  占い一覧を取り出す
             uranais = await _context.Uranais.ToListAsync<Uranais>();
 
+            //  ハブコネクションのスタート
+            await hubConnection.StartAsync();
+
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            NaviManager.NavigateTo("/Error", forceLoad: true);
+            return;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
             NaviManager.NavigateTo("/Error/0", forceLoad: true);
+            return;
         }
 
-        await hubConnection.StartAsync();
     }
 
     /// <summary>

@@ -41,18 +41,16 @@ public class ThreadsDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Threadsコネクションオープンエラー");
+            throw;
 
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Threadsコネクション処理エラー");
+            throw;
 
         }
-
-        return false;
     }
 
     public int Insert(Threads ths)
@@ -107,13 +105,13 @@ public class ThreadsDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Threadsインサートエラー");
+            throw;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Threadsインサート処理エラー");
+            throw;
         }
         finally
         {
@@ -158,7 +156,11 @@ public class ThreadsDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Threadsアップデート処理エラー");
+            throw;
+        }
+        finally
+        {
+            conn?.Close();
         }
 
     }

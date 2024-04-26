@@ -38,14 +38,14 @@ public class MessagesDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Messagesコネクションオープンエラー");
+            throw;
 
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Messagesコネクション処理エラー");
+            throw;
 
         }
 
@@ -99,13 +99,13 @@ public class MessagesDao
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Messagesインサートエラー");
+            throw;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("Messagesインサート処理エラー");
+            throw;
         }
         finally
         {

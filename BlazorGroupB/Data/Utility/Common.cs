@@ -45,7 +45,7 @@ public class Common
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("PostMessagesエラー");
+            throw;
 
         }
 
@@ -78,7 +78,7 @@ public class Common
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("NewThreadエラー");
+            throw;
         }
 
     }
@@ -104,7 +104,7 @@ public class Common
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            throw new Exception("CreateUserIDエラー");
+            throw;
         }
 
     }

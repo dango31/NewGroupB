@@ -141,6 +141,17 @@
                 ura = uranais.Where(m => m.UranaiID == rand).ToList();
                 msg.DetailMessage += "占いの結果：" + ura[0].Fortune;
             }
+            try
+            {
+                //  メッセージの投稿を行う
+                common.PostMessage(msg, codeInteger, userdataID);
+
+            }
+            catch
+            {
+                NaviManager.NavigateTo("/Error/3", forceLoad: true);
+                return;
+            }
         }
         catch
         {
@@ -148,17 +159,7 @@
             return;
         }
 
-        try
-        {
-            //  メッセージの投稿を行う
-            common.PostMessage(msg, codeInteger, userdataID);
 
-        }
-        catch
-        {
-            NaviManager.NavigateTo("/Error/3", forceLoad: true);
-            return;
-        }
         try
         {
             //  Hubに送信します
@@ -169,7 +170,7 @@
         }
         catch
         {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
+            NaviManager.NavigateTo("/Error/10", forceLoad: true);
 
         }
 
@@ -177,44 +178,6 @@
         //  contentデータの整理(削除)
         content = "";
 
-
-    }
-
-    /// <summary>
-    /// トップページに戻る
-    /// </summary>
-    public void BackTopPage()
-    {
-        try
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("/");
-            NaviManager.NavigateTo(sb.ToString(), forceLoad: true);
-        }
-        catch
-        {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
-
-        }
-
-    }
-    /// <summary>
-    /// ページの再読み込み
-    /// </summary>
-    private void ReloadPage()
-    {
-        try
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("/ThreadPage/")
-                .Append(CodeID);
-            NaviManager.NavigateTo(sb.ToString(), forceLoad: true);
-        }
-        catch
-        {
-            NaviManager.NavigateTo("/Error", forceLoad: true);
-
-        }
 
     }
 
@@ -266,11 +229,12 @@
     protected override async Task OnInitializedAsync()
     {
 
+        //  パラメーターの確認とCommonクラスのインスタンス
         try
         {
-
             if (!int.TryParse(CodeID, out codeInteger))
                 NaviManager.NavigateTo("/Error", forceLoad: true);
+
             try
             {
                 //  Commonクラスのインスタンス
@@ -282,23 +246,6 @@
                 return;
             }
 
-            //  ハブコネクションの接続の構築
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl(NaviManager.ToAbsoluteUri("/chathub"))
-                .Build();
-
-            //  受信したデータをメッセージリストに追加している
-            //  最後にInvokeAsync(StateHasChanged)を呼び出すことで
-            // blazorに通知され、UIが更新される
-            hubConnection.On<Messages>("ReceiveMessage", (msg) =>
-            {
-                if (msg.ThreadID == codeInteger)
-                {
-                    Msgs.Add(msg);
-                    InvokeAsync(StateHasChanged);
-                }
-
-            });
         }
         catch (Exception ex)
         {
@@ -308,9 +255,53 @@
             return;
         }
 
+        //  ハブの接続
         try
         {
-            //  データベースから値を取り出す
+
+            //  ハブの接続の構築
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NaviManager.ToAbsoluteUri("/chathub"))
+                .Build();
+
+            //  受信したデータをメッセージリストに追加している
+            //  最後にInvokeAsync(StateHasChanged)を呼び出すことで
+            //  blazorに通知され、UIが更新される
+            hubConnection.On<Messages>("ReceiveMessage", (msg) =>
+            {
+                if (msg.ThreadID == codeInteger)
+                {
+                    Msgs.Add(msg);
+                    InvokeAsync(StateHasChanged);
+                }
+
+            });
+
+            try
+            {
+                //  ハブコネクションのスタート
+                await hubConnection.StartAsync();
+
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+                NaviManager.NavigateTo("/Error/9", forceLoad: true);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.StackTrace);
+            NaviManager.NavigateTo("/Error/8", forceLoad: true);
+            return;
+        }
+
+        //  データベースから値を取り出す
+        try
+        {
             //  メッセージ一覧を取り出す
             Msgs = await _context.Messages.Where(m => m.ThreadID == codeInteger).ToListAsync<Messages>();
 
@@ -322,16 +313,6 @@
             //  占い一覧を取り出す
             uranais = await _context.Uranais.ToListAsync<Uranais>();
 
-            //  ハブコネクションのスタート
-            await hubConnection.StartAsync();
-
-        }
-        catch (HttpRequestException ex)
-        {
-            Debug.WriteLine(ex.Message);
-            Debug.WriteLine(ex.StackTrace);
-            NaviManager.NavigateTo("/Error", forceLoad: true);
-            return;
         }
         catch (Exception ex)
         {
@@ -360,7 +341,7 @@
         {
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
-            NaviManager.NavigateTo("/Error", forceLoad: true);
+            NaviManager.NavigateTo("/Error/11", forceLoad: true);
         }
 
     }
@@ -381,6 +362,43 @@
             Debug.WriteLine(ex.Message);
             Debug.WriteLine(ex.StackTrace);
             NaviManager.NavigateTo("/Error", forceLoad: true);
+        }
+
+    }
+    /// <summary>
+    /// トップページに戻る
+    /// </summary>
+    public void BackTopPage()
+    {
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("/");
+            NaviManager.NavigateTo(sb.ToString(), forceLoad: true);
+        }
+        catch
+        {
+            NaviManager.NavigateTo("/Error", forceLoad: true);
+
+        }
+
+    }
+    /// <summary>
+    /// ページの再読み込み
+    /// </summary>
+    private void ReloadPage()
+    {
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("/ThreadPage/")
+                .Append(CodeID);
+            NaviManager.NavigateTo(sb.ToString(), forceLoad: true);
+        }
+        catch
+        {
+            NaviManager.NavigateTo("/Error", forceLoad: true);
+
         }
 
     }

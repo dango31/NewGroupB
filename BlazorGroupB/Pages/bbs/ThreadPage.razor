@@ -258,17 +258,17 @@
         //  ハブの接続
         try
         {
-            //  HttpClientHandlerの作成
-            //  証明書のための追加
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-            HttpClient client = new HttpClient(clientHandler);
+            // //  HttpClientHandlerの作成
+            // //  証明書のための追加
+            // HttpClientHandler clientHandler = new HttpClientHandler();
+            // clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // HttpClient client = new HttpClient(clientHandler);
 
             //  ハブの接続の構築
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NaviManager.ToAbsoluteUri("/chathub")
                     //  証明書のためにここの一文を追加
-                    , option => { option.HttpMessageHandlerFactory = x => clientHandler; }
+                    // , option => { option.HttpMessageHandlerFactory = x => clientHandler; }
                 )
                 .Build();
 

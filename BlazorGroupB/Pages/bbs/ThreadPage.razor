@@ -35,14 +35,14 @@
             <div class="message-container border rounded p-3 mt-3">
                 <div class="d-flex justify-content-between">
                     <div>@msg.WriteName</div>
-                    @if (msg.UserID == userdataID)
+@*                     @if (msg.UserID == userdataID)
                     {
                         <div style="color:green;">@msg.UserID</div>
                     }
                     else
                     {
                         <div>@msg.UserID</div>
-                    }
+                    } *@
                     <div>@msg.PostTime</div>
                 </div>
                 <div>@msg.DetailMessage</div>
@@ -329,7 +329,7 @@
             NaviManager.NavigateTo("/Error/1", forceLoad: true);
             return;
         }
-
+        InvokeAsync(StateHasChanged);
     }
 
     /// <summary>

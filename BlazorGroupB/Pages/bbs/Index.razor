@@ -12,6 +12,8 @@
 @inject NavigationManager NaviManager
 @inject IJSRuntime JSRuntime
 
+<div class="bg_pattern Cross"></div>
+
 <div class="purple-band d-flex justify-content-between align-items-center">
     <h1 class="text-white mx-auto">エール第一チャンネル</h1>
 </div>
@@ -22,22 +24,31 @@
 </div>
 
 <div class="search">
-    <button @onclick="NewThread" style="font-size: 16px; width: 250px; padding: 15px 30px;">新規スレッド投稿</button>
+    <a @onclick="NewThread" class="btn btn-border"><span>新規スレッド作成！</span></a>
     <!-- 検索用の入力欄 -->
     <input type="text" @bind="searchString" placeholder="検索">
     <!-- 検索ボタン -->
     <button @onclick="SelectSearch" class="button">検索</button>
 </div>
 
+<div class="btn-switch btn-switch-wrap">
+    <input type="checkbox" id="onoff" name="onoff" checked>
+    <div class="btn-switch-bg">
+        <label class="btn-switch-in" for="onoff">
+            <span class="on">ON</span>
+            <span class="off">OFF</span>
+        </label>
+    </div>
+</div>
+
 <h1 class="text-center">スレッド一覧</h1>
 
-<div style="text-align: right">更新順</div>
-<!-- メッセージ一覧 -->
+<div style="margin-left: 850px;">更新順</div><!-- メッセージ一覧 -->
 @if (Ths != null && !searchbool)
 {
     @foreach (var th in Ths)
     {
-        <div class="message-container border rounded p-3 mt-3">
+        <div class="message-container border rounded p-3 mt-3 " style="width: 700px; margin-left: auto; margin-right: auto;">
             <div class="d-flex justify-content-between">
                 <div>@th.ThreadID <a href="/ThreadPage/@th.ThreadID">@th.ThreadName</a></div>
                 <div>@th.LastPostTime</div>

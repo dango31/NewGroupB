@@ -5,6 +5,12 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.background-tiles {
+    background-image: url('/watermark.jpg'); /* ルートディレクトリからの相対パス */
+    background-repeat: repeat;
+}
+
+
 /* h1要素にフォーカスが当たったときのスタイル */
 h1:focus {
     outline: none;
@@ -140,6 +146,194 @@ a, .btn-link {
     margin: 10px 10px 10px 0; /* 右側のボタンのみに右側のマージンを追加 */ /* 上部のマージンを追加 */
     margin-left: 10px; /* ボタンの左側にマージンを追加 */
 }
+
+
+/*=============
+.bg_pattern
+==============*/
+
+.bg_pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffe9a7;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+.Cross {
+    background: radial-gradient(circle, transparent 20%, #ccc 20%, #ccc 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #ccc 20%, #ccc 80%, transparent 80%, transparent) 50px 50px, linear-gradient(#eee 4px, transparent 4px) 0 -2px, linear-gradient(90deg, #eee 4px, #ccc 4px) -2px 0;
+    background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
+}
+
+/*=============
+base
+==============*/
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: YuGothic, "游ゴシック体", "Yu Gothic", "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    letter-spacing: .025em;
+    line-height: 1.8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.section {
+    max-width: 1024x;
+    margin: 0 auto;
+    padding: 100px 20px 1000px;
+}
+
+._a {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+    ._a a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 2.0em 1.0em;
+        border: 1px solid #222222;
+        background: linear-gradient(to right, #ffffff 50%, #222222 50%);
+        background-size: 200% auto;
+        color: #222222;
+        font-size: 12px;
+        text-decoration: none;
+        text-align: center;
+        transition: .3s;
+        position: relative;
+    }
+
+        ._a a:after {
+            content: "";
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+            width: 100%;
+            height: 100%;
+            border-right: 1px solid #222222;
+            border-bottom: 1px solid #222222;
+        }
+
+        ._a a:hover {
+            color: #ffffff;
+            background-position: -100% 0;
+        }
+
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+html {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+
+.btn,
+a.btn,
+button.btn {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.5;
+    position: relative;
+    display: inline-block;
+    padding: 1rem 4rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    color: #212529;
+    border-radius: 0.5rem;
+}
+
+a.btn-border {
+    margin-bottom: 12px;
+    padding: 0;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    border-radius: 0;
+}
+
+    a.btn-border span {
+        position: relative;
+        display: block;
+        padding: 1.25rem 3rem;
+        color: #000;
+        border: 2px solid #000;
+        border-radius: 0.5rem;
+        background: #fff;
+    }
+
+    a.btn-border:before {
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 14px;
+        content: "";
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        border: 2px solid #000;
+        border-top: 1px solid #000;
+        border-radius: 0 0 0.5rem 0.5rem;
+        background-image: -webkit-repeating-linear-gradient( 135deg, #000, #000 1px, transparent 2px, transparent 5px );
+        background-image: repeating-linear-gradient( -45deg, #000, #000 1px, transparent 2px, transparent 5px );
+        background-size: 7px 7px;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    a.btn-border:hover {
+        -webkit-transform: translate(0, 3px);
+        transform: translate(0, 3px);
+    }
+
+        a.btn-border:hover:before {
+            bottom: -5px;
+        }
+
+    a.btn-border:active {
+        -webkit-transform: translate(0, 7px);
+        transform: translate(0, 7px);
+    }
+
+        a.btn-border:active:before {
+            bottom: -1px;
+        }
+
+
+
+
+
+
+
+
+
+
 
     .buttons button:first-child {
         margin-left: 0; /* 最初のボタンにはマージンを追加しない */
@@ -296,3 +490,165 @@ a, .btn-link {
     .clear-button:hover {
         background-color: #cc0000; /* ホバー時の色 */
     }
+
+
+
+
+
+
+
+
+
+/*オンオフスイッチ
+*/*,
+*:before,
+*:after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+html {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+
+.btn,
+a.btn,
+button.btn {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.5;
+    position: relative;
+    display: inline-block;
+    padding: 1rem 4rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    color: #212529;
+    border-radius: 0.5rem;
+}
+
+.btn-switch {
+    width: 148px;
+    height: 250px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: -webkit-gradient( linear, left top, left bottom, from(#444), to(#222) );
+    background: -webkit-linear-gradient(top, #444, #222);
+    background: linear-gradient(180deg, #444, #222);
+    -webkit-box-shadow: 0 0 0 8px rgba(0, 0, 0, 0), 0 0 3px 1px black, inset 0 8px 4px -8px white;
+    box-shadow: 0 0 0 8px rgba(0, 0, 0, 0), 0 0 3px 1px black, inset 0 8px 4px -8px white;
+}
+
+    .btn-switch input {
+        display: none;
+    }
+
+.btn-switch-bg {
+    width: 108px;
+    height: 210px;
+    padding: 4px 4px;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    border-radius: 5px;
+    background-color: #370305;
+    background-image: -webkit-linear-gradient( 0deg, transparent 30%, transparent 70% ), -webkit-linear-gradient(0deg, rgba(150, 150, 150, 0) 30%, rgba( 150, 150, 150, 0.1 ) 50%, rgba(150, 150, 150, 0) 70%);
+    -webkit-box-shadow: 30px 30px 30px -20px rgba(0, 0, 0, 0.3), -30px 30px 30px -20px rgba(0, 0, 0, 0.3), 0 30px 30px 0 rgba(0, 0, 0, 0.3), inset 0 -1px 0 0 #333;
+    box-shadow: 30px 30px 30px -20px rgba(0, 0, 0, 0.3), -30px 30px 30px -20px rgba(0, 0, 0, 0.3), 0 30px 30px 0 rgba(0, 0, 0, 0.3), inset 0 -1px 0 0 #333;
+}
+
+.btn-switch-in {
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 178px;
+    -webkit-transition: all 0.2s;
+    border-radius: 10px;
+    background-image: -webkit-gradient( linear, left bottom, left top, from(#8c1313), color-stop(84%, #ff2a2a) );
+    background-image: -webkit-linear-gradient(bottom, #8c1313 0%, #ff2a2a 84%);
+    background-image: linear-gradient(to top, #8c1313 0%, #ff2a2a 84%);
+    -webkit-box-shadow: inset 0 20px 60px -200px rgba(240, 0, 0, 0.2), inset 8px 6px 5px -7px #f95253, inset -8px 6px 5px -7px #f95253, inset 0 -3px 2px -2px rgba(200, 200, 200, 0.5), 0 3px 3px -2px #f95253, inset 0 230px 60px -200px rgba(255, 255, 255, 0.2), 0 -20px 50px 10px rgba(240, 0, 0, 0.3);
+    box-shadow: inset 0 20px 60px -200px rgba(240, 0, 0, 0.2), inset 8px 6px 5px -7px #f95253, inset -8px 6px 5px -7px #f95253, inset 0 -3px 2px -2px rgba(200, 200, 200, 0.5), 0 3px 3px -2px #f95253, inset 0 230px 60px -200px rgba(255, 255, 255, 0.2), 0 -20px 50px 10px rgba(240, 0, 0, 0.3);
+}
+
+    .btn-switch-in .on {
+        font-size: 20px;
+        font-weight: bold;
+        position: absolute;
+        top: 25px;
+        left: 0;
+        width: 100%;
+        -webkit-transition: all 0.1s ease;
+        transition: all 0.1s ease;
+        text-align: center;
+        opacity: 1;
+        color: #fff;
+        text-shadow: 0 0 5px #ffc7c7, 0 0 5px #ffc7c7, 0 0 5px #ffc7c7, 0 0 5px #ffc7c7;
+    }
+
+    .btn-switch-in .off {
+        font-size: 20px;
+        font-weight: bold;
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        -webkit-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+        -webkit-transform: scaleY(0.9);
+        transform: scaleY(0.9);
+        text-align: center;
+        opacity: 0.5;
+        color: #500101;
+    }
+
+.btn-switch input:checked + .btn-switch-bg .on {
+    height: 20px;
+    -webkit-transform: scaleY(0.85);
+    transform: scaleY(0.85);
+    opacity: 0.6;
+    color: #500101;
+    text-shadow: none;
+}
+
+.btn-switch input:checked + .btn-switch-bg .off {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    opacity: 0.5;
+}
+
+.btn-switch input:checked + .btn-switch-bg .btn-switch-in {
+    margin-top: 20px;
+    background-image: -webkit-gradient( linear, left bottom, left top, from(#f95253), color-stop(74%, #b40000) );
+    background-image: -webkit-linear-gradient(bottom, #f95253 0%, #b40000 74%);
+    background-image: linear-gradient(to top, #f95253 0%, #b40000 74%);
+    -webkit-box-shadow: inset 1px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 8px -4px 5px -7px black, inset -8px -4px 5px -7px black, 0 -3px 8px -4px rgba(250, 250, 250, 0.4), inset 0 3px 4px -2px #0a0a0a, inset 0 280px 40px -200px rgba(0, 0, 0, 0.2), inset 0 -200px 40px -200px rgba(180, 180, 180, 0.2);
+    box-shadow: inset 1px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 8px -4px 5px -7px black, inset -8px -4px 5px -7px black, 0 -3px 8px -4px rgba(250, 250, 250, 0.4), inset 0 3px 4px -2px #0a0a0a, inset 0 280px 40px -200px rgba(0, 0, 0, 0.2), inset 0 -200px 40px -200px rgba(180, 180, 180, 0.2);
+}
+
+.btn-switch input:checked + .btn-switch-bg {
+    background-image: -webkit-linear-gradient(90deg, #000 30%, transparent 70%), -webkit-linear-gradient(180deg, rgba(250, 250, 250, 0) 0%, rgba( 250, 250, 250, 0.5 ) 50%, rgba(150, 150, 150, 0) 100%);
+    -webkit-box-shadow: 30px 30px 30px -20px rgba(0, 0, 0, 0.1), -30px 30px 30px -20px rgba(0, 0, 0, 0.1), 0 30px 30px 0 rgba(0, 0, 0, 0.2), inset 0 1px 2px 0 rgba(0, 0, 0, 0.6);
+    box-shadow: 30px 30px 30px -20px rgba(0, 0, 0, 0.1), -30px 30px 30px -20px rgba(0, 0, 0, 0.1), 0 30px 30px 0 rgba(0, 0, 0, 0.2), inset 0 1px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+#onoff,
+.btn-switch-bg,
+.btn-switch-in,
+.on,
+.off {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

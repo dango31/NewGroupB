@@ -17,7 +17,7 @@
 <div class="thread-creation-page">
     <!-- ヘッダー部分 -->
     <div class="purple-band d-flex justify-content-between align-items-center">
-        <button class="btn btn-primary rounded-pill" @onclick="BackTopPage">トップページへ</button>
+        <a @onclick="BackTopPage" class="btn btn-border"><span>トップページへ</span></a>
         <h1 class="text-white mx-auto">エール第一チャンネル</h1>
     </div>
     <!-- スレッド作成フォーム -->
@@ -40,9 +40,9 @@
         </div>
         <div class="button-group">
             <!-- 全クリアボタン -->
-            <button @onclick="ClearContent" class="clear-button">全クリア</button>
+            <a @onclick="OnCreateThread" class="btn btn-border"><span>全クリア</span></a>
             <!-- スレッド作成ボタン -->
-            <button @onclick="OnCreateThread" class="create-thread-button">スレッド作成</button>
+            <a @onclick="OnCreateThread" class="btn btn-border"><span>スレッド作成</span></a>
         </div>
     </div>
 </div>

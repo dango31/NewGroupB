@@ -19,8 +19,8 @@
 </div>
 
 <div class="buttons">
-    <button @onclick="DoFortuneTelling" class="buttons special" style="font-size: 16px; width: 100px; padding: 15px 30px;">占い</button>
-    <button @onclick="ReloadPage" style="font-size: 16px; width: 170px; padding: 15px 30px;">再読み込み</button>
+    <a @onclick="DoFortuneTelling" class="btn btn-border" ><span>占い</span></a>
+    <a @onclick="ReloadPage" class="btn btn-border"><span>再読み込み</span></a>
 </div>
 
 <div class="search">
@@ -28,7 +28,7 @@
     <!-- 検索用の入力欄 -->
     <input type="text" @bind="searchString" placeholder="検索">
     <!-- 検索ボタン -->
-    <button @onclick="SelectSearch" class="button">検索</button>
+    <a @onclick="SelectSearch" class="btn btn-border"><span>検索</span></a>
 </div>
 
 <h1 class="text-center">スレッド一覧</h1>
@@ -38,7 +38,7 @@
 {
     @foreach (var th in Ths)
     {
-        <div class="message-container border rounded p-3 mt-3 " style="width: 700px; margin-left: auto; margin-right: auto;">
+        <div class="message-container border rounded p-3 mt-3 " style="width: 700px; margin-left: auto; margin-right: auto;font-size: 15px;">
             <div class="d-flex justify-content-between">
                 <div>@th.ThreadID <a href="/ThreadPage/@th.ThreadID">@th.ThreadName</a></div>
                 <div>@th.LastPostTime</div>
@@ -57,7 +57,7 @@ else if (searchbool)
         @foreach (var th in afterSearch)
         {
 
-            <div class="message-container border rounded p-3 mt-3 " style="width: 700px; margin-left: auto; margin-right: auto;">
+            <div class="message-container border rounded p-3 mt-3 " style="width: 700px; margin-left: auto; margin-right: auto; font-size: 15px;">
                 <div class="d-flex justify-content-between">
                     <div>@th.ThreadID <a href="/ThreadPage/@th.ThreadID">@th.ThreadName</a></div>
                     <div>@th.LastPostTime</div>

@@ -286,6 +286,11 @@ a.btn-border {
         border-radius: 0.5rem;
         background: #fff;
     }
+    a.red-btn span {
+    color: #fff; /* 文字色を白色に変更 */
+    background: #ff0000; /* 背景色を赤色に変更 */
+    border: 2px solid #ff0000; /* ボーダーの色も赤色に変更 */
+    }
 
     a.btn-border:before {
         position: absolute;
